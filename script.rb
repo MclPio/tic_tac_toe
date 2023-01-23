@@ -22,6 +22,10 @@ module Play
       puts 'Player 2 wins'
       show_game_board
       true
+    elsif @board.all? { |elements| elements.is_a? String }
+      puts 'Draw'
+      show_game_board
+      true
     else
       false
     end
