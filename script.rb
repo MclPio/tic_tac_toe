@@ -1,6 +1,3 @@
-# class GameBoard will house the array
-# class playround will start the game
-# class players will keep tally of score
 module Play
   def show_game_board
     puts " #{@board[0..2].join(' | ')}"
@@ -10,7 +7,58 @@ module Play
 
   def location_taken?(index)
     if @board[index - 1] == 'X' || @board[index - 1] == 'O'
-      puts 'Please choose a different location'
+      true
+    else
+      false
+    end
+  end
+
+  def winner_check
+    if horizontal_win('X') || cross_win('X') || vertical_win('X')
+      puts 'Player 1 wins'
+      show_game_board
+      true
+    elsif horizontal_win('O') || cross_win('O') || vertical_win('O')
+      puts 'Player 2 wins'
+      show_game_board
+      true
+    else
+      false
+    end
+  end
+
+  def horizontal_win(player_sign)
+    if @board[0..2].all?(player_sign) || @board[3..5].all?(player_sign) || @board[6..8].all?(player_sign)
+      true
+    else
+      false
+    end
+  end
+
+  def cross_win(player_sign)
+    if @board[0] == player_sign && @board[4] == player_sign && @board[8] == player_sign
+      true
+    elsif @board[2] == player_sign && @board[4] == player_sign && @board[6] == player_sign
+      true
+    else
+      false
+    end
+  end
+
+  def vertical_win(player_sign)
+    if @board[0] == player_sign && @board[3] == player_sign && @board[6] == player_sign
+      true
+    elsif @board[1] == player_sign && @board[4] == player_sign && @board[7] == player_sign
+      true
+    elsif @board[2] == player_sign && @board[5] == player_sign && @board[8] == player_sign
+      true
+    else
+      false
+    end
+  end
+
+  def input_check?(input)
+    if !input.between?(1, 9) || location_taken?(input)
       true
     else
       false
@@ -20,10 +68,9 @@ module Play
   def player1_turn
     loop do
       show_game_board
-      puts 'Player 1 choose a location to place your X'
       player1_input = gets.chomp.to_i
-      if !player1_input.between?(1, 9) || location_taken?(player1_input)
-        puts 'Please enter a number between 1..9'
+      if input_check?(player1_input)
+        puts 'INVALID INPUT'
         next
       else
         @board[player1_input - 1] = 'X'
@@ -35,10 +82,9 @@ module Play
   def player2_turn
     loop do
       show_game_board
-      puts 'Player 2 choose a location to place your O'
       player2_input = gets.chomp.to_i
-      if !player2_input.between?(1, 9) || location_taken?(player2_input)
-        puts 'Please enter a number between 1..9'
+      if input_check?(player2_input)
+        puts 'INVALID INPUT'
         next
       else
         @board[player2_input - 1] = 'O'
@@ -49,8 +95,13 @@ module Play
 
   def play_round
     loop do
+      puts 'Player 1 choose a location to place your X'
       player1_turn
+      break if winner_check
+
+      puts 'Player 2 choose a location to place your O'
       player2_turn
+      break if winner_check
     end
   end
 end
