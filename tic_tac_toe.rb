@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Play
   def show_game_board
     puts " #{@board[0..2].join(' | ')}"
